@@ -1,4 +1,4 @@
-/*  hellwal - MIT LICENSE
+/*  roxgen - MIT LICENSE
  *
  * changelog v1.0.5:
  *  - New and proper relative luminance calculations thanks to @mimvoid https://github.com/danihek/hellwal/pull/39
@@ -19,7 +19,7 @@
  *  - added alpha variable, you can set alpha by providing it right after keyword in templates (e.g. "%% color1.hex alpha=0.5%%") - requested in issues by @chinh4thepro
  *  - added --skip-term-colors - it skips setting colors(printing escape codes) to the terminals - requested in issues by @SherLock707
  *  - added new templates for zathuram mako, dwl and fuzzel thanks to @amolinae06
- *  - separeted color related functions from hellwal.c into its own header only library
+ *  - separeted color related functions from roxgen.c into its own header only library
  *
  *   I forgot to acknowledge v1.0.3:
  *  - thanks for fixing makefile and ivaild free usage: @MalcolmReed-ent
@@ -33,7 +33,7 @@
  *  - added fish template
  *  - changed: README typo
  *  - changed: Makefile - Fixed the order of compiler flags
- *  - changed: hellwal.c - Removed problematic free(pal) line
+ *  - changed: roxgen.c - Removed problematic free(pal) line
  *
  * changelog v1.0.2:
  *  - changed ~~arc4random()~~ to rand(), because it's not available on all platforms
@@ -69,7 +69,7 @@
  *
  *  changelog v0.0.6:
  *  - improved colors, gen_palette() function is re-designed
- *  - added in ./assests example script how you can use hellwal
+ *  - added in ./assests example script how you can use roxgen
  *  - removed colors.sh
  *
  *  changelog v0.0.5:
@@ -81,7 +81,7 @@
  *  changelog v0.0.4:
  *   - combined logging palletes into one
  *   - support for --random (pics random image or template from specified directory)
- *   - support for executing scripts after running hellwal
+ *   - support for executing scripts after running roxgen
  *   - added terminal template, adjusted colors.sh
  *   - better --help
  *
@@ -199,8 +199,8 @@ enum COLOR_TYPES { HEX_t, RGB_t, R_t, G_t, B_t };
  ***/
 
 /* these are being set in set_args() */
-char HELLWAL_DELIM = '%';
-char HELLWAL_DELIM_COUNT = 2;
+char ROXGEN_DELIM = '%';
+char ROXGEN_DELIM_COUNT = 2;
 
 // FLAGS
 
@@ -233,7 +233,7 @@ struct {
 
     /* 
      * output folder for generated templates,
-     * default one is in ~/.cache/hellwal/
+     * default one is in ~/.cache/roxgen/
      */
     char *OUTPUT;
 
@@ -259,7 +259,7 @@ struct {
     /* enables more verbose output, to see what's going on */
     uint8_t DEBUG : 1;
 
-    /* run script after successfull hellwal job, requires path */
+    /* run script after successfull roxgen job, requires path */
     char *SCRIPT;
 
     /* do not cache palette, do not read cached palettes */
@@ -391,7 +391,7 @@ char *home_full_path(const char* path);
 void check_output_dir(char *path);
 void remove_whitespaces(char *str);
 void run_script(const char *script);
-void hellwal_usage(const char *name);
+void roxgen_usage(const char *name);
 void remove_extra_whitespaces(char *str);
 
 /* logging */
@@ -462,7 +462,7 @@ int process_theme(char *t, PALETTE *pal);
  ***/
 
 /* prints usage to stdout */
-void hellwal_usage(const char *name)
+void roxgen_usage(const char *name)
 {
     printf("Usage:\n");
     printf("  %s -i <image> [OPTIONS]\n\n", name);
@@ -476,7 +476,7 @@ void hellwal_usage(const char *name)
     printf("  -r, --random                       Pick random image or theme\n");
     printf("  -q, --quiet                        Suppress output\n");
     printf("  -j, --json                         Prints colors to stdout in json format, it's skipping templates\n");
-    printf("  -s, --script             <script>  Execute script after running hellwal\n");
+    printf("  -s, --script             <script>  Execute script after running roxgen\n");
     printf("  -f, --template-folder    <dir>     Set folder containing templates\n");
     printf("  -o, --output             <dir>     Set output folder for generated templates\n");
     printf("  -t, --theme              <file>    Set theme file or name\n");
@@ -496,9 +496,9 @@ void hellwal_usage(const char *name)
     printf("  --static-foreground \"#hex\"         Set static foreground color\n");
     printf("  -h, --help                         Display this help and exit\n\n");
     printf("Defaults:\n");
-    printf("  Template folder: ~/.config/hellwal/templates\n");
-    printf("  Theme folder: ~/.config/hellwal/themes\n");
-    printf("  Output folder: ~/.cache/hellwal/\n\n");
+    printf("  Template folder: ~/.config/roxgen/templates\n");
+    printf("  Theme folder: ~/.config/roxgen/themes\n");
+    printf("  Output folder: ~/.cache/roxgen/\n\n");
 }
 
 /* set given arguments */
@@ -512,7 +512,7 @@ int set_args(int argc, char *argv[])
 
         if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0)
         {
-            hellwal_usage(argv[0]);
+            roxgen_usage(argv[0]);
             exit(EXIT_SUCCESS);
         }
         else if ((strcmp(argv[i], "--image") == 0 || strcmp(argv[i], "-i") == 0))
@@ -743,9 +743,9 @@ int set_args(int argc, char *argv[])
         ARGS.OFFSET_GLOBAL += ARGS.BRIGHTNESS_OFFSET;
 
     /* If not specified, set default ones */
-    SET_DEF(ARGS.OUTPUT, "~/.cache/hellwal/");
-    SET_DEF(ARGS.THEME_FOLDER , "~/.config/hellwal/themes");
-    SET_DEF(ARGS.TEMPLATE_FOLDER, "~/.config/hellwal/templates");
+    SET_DEF(ARGS.OUTPUT, "~/.cache/roxgen/");
+    SET_DEF(ARGS.THEME_FOLDER , "~/.config/roxgen/themes");
+    SET_DEF(ARGS.TEMPLATE_FOLDER, "~/.config/roxgen/templates");
 
     return 0;
 }
@@ -804,7 +804,7 @@ void print_color(RGB col)
 
 /* 
  * prints to stderr formatted output and exits with EXIT_FAILURE,
- * also prints hellwal_usage()
+ * also prints roxgen_usage()
  */
 void eu(const char *format, ...)
 {
@@ -817,7 +817,7 @@ void eu(const char *format, ...)
 
     fprintf(stderr, "\033[0m\n");
 
-    hellwal_usage("hellwal");
+    roxgen_usage("roxgen");
 
     exit(EXIT_FAILURE);
 }
@@ -1720,9 +1720,9 @@ void palette_write_cache(char *filepath, PALETTE *p)
 
     char *filename = basename(filepath);
 
-    size_t cache_file_len = strlen(filename) + strlen(".hellwal") + 1;
+    size_t cache_file_len = strlen(filename) + strlen(".roxgen") + 1;
     char *cache_file = (char*)malloc(cache_file_len);
-    snprintf(cache_file, cache_file_len, "%s.hellwal", filename);
+    snprintf(cache_file, cache_file_len, "%s.roxgen", filename);
 
     size_t cache_dir_len = strlen(ARGS.OUTPUT) + strlen("/cache/") + 1;
     char *cache_dir = (char*)malloc(cache_dir_len);
@@ -1759,9 +1759,9 @@ int check_cached_palette(char *filepath, PALETTE *p)
 
     char *filename = basename(filepath);
 
-    size_t cache_file_len = strlen(filename) + strlen(".hellwal") + 1;
+    size_t cache_file_len = strlen(filename) + strlen(".roxgen") + 1;
     char *cache_file = (char*)malloc(cache_file_len);
-    snprintf(cache_file, cache_file_len, "%s.hellwal", filename);
+    snprintf(cache_file, cache_file_len, "%s.roxgen", filename);
 
     size_t cache_dir_len = strlen(ARGS.OUTPUT) + strlen("/cache/") + 1;
     char *cache_dir = (char*)malloc(cache_dir_len);
@@ -1986,7 +1986,7 @@ void process_template(TEMPLATE *t, PALETTE pal)
         char ch;
         if (hell_parser_next(p, &ch) == HELL_PARSER_OK)
         {
-            if (ch == HELLWAL_DELIM)
+            if (ch == ROXGEN_DELIM)
             {
                 /* escape delim */
                 if (skip == 1)
@@ -2003,7 +2003,7 @@ void process_template(TEMPLATE *t, PALETTE pal)
                 else
                 {
 		    int is_double_delim = 0;
-		    if (p->pos < p->length && p->input[p->pos] == HELLWAL_DELIM)
+		    if (p->pos < p->length && p->input[p->pos] == ROXGEN_DELIM)
                     {
                         is_double_delim = 1;
                     }
@@ -2039,10 +2039,10 @@ void process_template(TEMPLATE *t, PALETTE pal)
                         strncat(template_buffer, p->input + buffrd_pos, size_before_delim);
                     }
 
-                    /* extract hellwal template style from templates:
+                    /* extract roxgen template style from templates:
                      *
                      * example:
-                     *    ```template.hellwal
+                     *    ```template.roxgen
                      *
                      *      random text here
                      *      some randome values
@@ -2054,7 +2054,7 @@ void process_template(TEMPLATE *t, PALETTE pal)
                      *    ```
                      *
                      */
-                    if (hell_parser_delim_buffer_between(p, HELLWAL_DELIM, HELLWAL_DELIM_COUNT, &delim_buf) == HELL_PARSER_OK)
+                    if (hell_parser_delim_buffer_between(p, ROXGEN_DELIM, ROXGEN_DELIM_COUNT, &delim_buf) == HELL_PARSER_OK)
                     {
                         remove_extra_whitespaces(delim_buf);
                         hell_parser_t *pdt = hell_parser_create(delim_buf);
@@ -2429,12 +2429,12 @@ int process_theme(char *t, PALETTE *pal)
         char ch;
         if (hell_parser_next(p, &ch) == HELL_PARSER_OK)
         {
-            if (ch == HELLWAL_DELIM)
+            if (ch == ROXGEN_DELIM)
             {
                 p->pos -= 1;  
                 char *delim_buf = NULL;
 
-                if (hell_parser_delim_buffer_between(p, HELLWAL_DELIM, HELLWAL_DELIM_COUNT, &delim_buf) == HELL_PARSER_OK)
+                if (hell_parser_delim_buffer_between(p, ROXGEN_DELIM, ROXGEN_DELIM_COUNT, &delim_buf) == HELL_PARSER_OK)
                 {
                     hell_parser_t *pd = hell_parser_create(delim_buf);
                     if (pd == NULL)

@@ -1,8 +1,8 @@
-;;; hellwal-theme.el --- Theme using Hellwal variables
+;;; roxgen-theme.el --- Theme using Hellwal variables
 ;;; Commentary:
 ;;; Code:
 
-(deftheme hellwal "Theme using Hellwal variables.")
+(deftheme roxgen "Theme using Hellwal variables.")
 
 (let* (
       ;; Hellwal semantic colors
@@ -68,7 +68,7 @@
 )
 
   (custom-theme-set-faces
-   'hellwal
+   'roxgen
 
    ;; BASIC
    `(default ((t (:background ,bg :foreground ,on-background))))
@@ -134,6 +134,6 @@
   (setq org-hide-leading-stars t)
   (setq org-startup-indented t))
 
-(provide-theme 'hellwal)
+(provide-theme 'roxgen)
 
-;;; hellwal-theme.el ends here
+;;; roxgen-theme.el ends here

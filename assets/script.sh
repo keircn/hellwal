@@ -3,14 +3,14 @@
 # Set up wallpaper folder
 wallpaper_path=$HOME/pics/wallpapers
 
-# Run hellwal to generate templates and get color palette
-./hellwal --image $wallpaper_path --random -f ./templates/
+# Run roxgen to generate templates and get color palette
+./roxgen --image $wallpaper_path --random -f ./templates/
 
 # Optionally you can load theme
-#./hellwal -r -k ./themes/
+#./roxgen -r -k ./themes/
 
 # Obtain variables (color values, wallpaper path)
-source ~/.cache/hellwal/variables.sh
+source ~/.cache/roxgen/variables.sh
 
 # Run wallpaper daemon
 swww img $wallpaper \
@@ -21,7 +21,7 @@ swww img $wallpaper \
   --invert-y
 
 # Update discord colors
-themecord -p ~/.cache/hellwal/discord-colors.css
+themecord -p ~/.cache/roxgen/discord-colors.css
 
 # Relaunch waybar to apply colors
     #wbar-reload

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_hellwal_complete() {
+_roxgen_complete() {
     local cur prev opts
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
@@ -43,4 +43,4 @@ _hellwal_complete() {
     fi
 }
 
-complete -F _hellwal_complete hellwal
+complete -F _roxgen_complete roxgen

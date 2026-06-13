@@ -5,24 +5,24 @@ LDFLAGS = -lm
 
 DESTDIR = /usr/local/bin
 
-hellwal: hellwal.c
-	$(CC) $(CFLAGS) hellwal.c -o hellwal $(LDFLAGS) -DVERSION=\"$(VERSION)\"
+roxgen: roxgen.c
+	$(CC) $(CFLAGS) roxgen.c -o roxgen $(LDFLAGS) -DVERSION=\"$(VERSION)\"
 
-debug: hellwal.c
-	$(CC) $(CFLAGS) -ggdb hellwal.c -o hellwal $(LDFLAGS) -DVERSION=\"$(VERSION)\"
+debug: roxgen.c
+	$(CC) $(CFLAGS) -ggdb roxgen.c -o roxgen $(LDFLAGS) -DVERSION=\"$(VERSION)\"
 
 clean:
-	rm hellwal
+	rm -f roxgen
 
-install: hellwal
+install: roxgen
 	mkdir -p $(DESTDIR)
-	cp -f hellwal $(DESTDIR)
-	chmod 755 $(DESTDIR)/hellwal # chmod u=rwx,g=rx,o=rx
+	cp -f roxgen $(DESTDIR)
+	chmod 755 $(DESTDIR)/roxgen # chmod u=rwx,g=rx,o=rx
 
 uninstall:
-	rm -f $(DESTDIR)/hellwal
+	rm -f $(DESTDIR)/roxgen
 
-release: hellwal
-	tar czf hellwal-v$(VERSION).tar.gz hellwal
+release: roxgen
+	tar czf roxgen-v$(VERSION).tar.gz roxgen
 
-.PHONY: hellwal debug release clean install uninstall
+.PHONY: roxgen debug release clean install uninstall
