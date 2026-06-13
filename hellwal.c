@@ -2264,7 +2264,7 @@ TEMPLATE **get_template_structure_dir(const char *dir_path, size_t *_size)
     struct dirent *entry;
     while ((entry = readdir(dir)) != NULL)
     {
-        if (entry->d_type == DT_REG)
+        if (entry->d_type == DT_REG || entry->d_type == DT_LNK)
         {
             size_t path_len = strlen(dir_path) + strlen(entry->d_name) + 2; // +2 for '/' and '\0'
             char *full_path = malloc(path_len);
